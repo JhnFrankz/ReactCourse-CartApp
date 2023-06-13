@@ -6,7 +6,6 @@ const initialCartItems = [
     // {
     //     product: {},
     //     quantity: 0,
-    //     total: 0,
     // }
 ];
 
@@ -15,14 +14,36 @@ export const CartApp = () => {
     const [cartItems, setCartItems] = useState(initialCartItems);
 
     const handlerAddProductCart = (product) => {
-        setCartItems([
-            ...cartItems,
-            {
-                product,
-                quantity: 1,
-                total: product.price * 1,
-            }
-        ]);
+
+        const hasItem = cartItems.find(i => i.product.id === product.id);
+        
+        if (hasItem) {
+            setCartItems(
+                cartItems.map(i => {
+                    if (i.product.id === product.id) {
+                        i.quantity = i.quantity + 1;
+                    }
+
+                    return i;
+                })
+            );
+            // setCartItems([
+            //     ...cartItems.filter(i => i.product.id !== product.id),
+            //     {
+            //         product,
+            //         quantity: hasItem.quantity + 1,
+            //     }
+            // ]);
+        } else {
+            setCartItems([
+                ...cartItems,
+                {
+                    product,
+                    quantity: 1,
+                    // el total no es necesario, ya que se maneja en el componente CartView.jsx
+                }
+            ]);
+        }
     };
 
     return (
