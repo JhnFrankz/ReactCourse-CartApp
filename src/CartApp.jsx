@@ -2,12 +2,8 @@ import { useState } from "react";
 import { CartView } from "./components/CartView";
 import { CatalogView } from "./components/CatalogView";
 
-const initialCartItems = [
-    // {
-    //     product: {},
-    //     quantity: 0,
-    // }
-];
+// si no existe el item 'cart' en el sessionStorage, se asigna un array vacio
+const initialCartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
 
 export const CartApp = () => {
 
