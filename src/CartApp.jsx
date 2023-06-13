@@ -13,10 +13,11 @@ export const CartApp = () => {
 
     const [cartItems, setCartItems] = useState(initialCartItems);
 
+    // funcion para agregar un producto al carrito
     const handlerAddProductCart = (product) => {
 
         const hasItem = cartItems.find(i => i.product.id === product.id);
-        
+
         if (hasItem) {
             setCartItems(
                 cartItems.map(i => {
@@ -46,6 +47,14 @@ export const CartApp = () => {
         }
     };
 
+    // funcion para eliminar un producto del carrito
+    const handlerDeleteProductCart = (id) => {
+        setCartItems([
+            ...cartItems.filter(i => i.product.id !== id),
+        ])
+    };
+
+
     return (
         <>
             <div className="container">
@@ -53,9 +62,14 @@ export const CartApp = () => {
                 <h3>Cart App</h3>
                 <CatalogView handler={handlerAddProductCart} />
 
-                <div className="my-4 w-50">
-                    <CartView items={cartItems} />
-                </div>
+                { //si la condición es falsa, se muestra el componente CartView
+                    // ? verifica si una variable es diferente de null o undefined
+                    cartItems?.length <= 0 || (
+                        <div className="my-4 w-50">
+                            <CartView items={cartItems} handlerDelete={handlerDeleteProductCart} />
+                        </div>
+                    )
+                }
             </div>
         </>
     );
