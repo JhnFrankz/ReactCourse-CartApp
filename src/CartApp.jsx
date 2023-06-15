@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useEffect, useReducer } from "react";
 import { CartView } from "./components/CartView";
 import { CatalogView } from "./components/CatalogView";
+import { itemsReducer } from "./reducer/itemsReducer";
+import { AddProductCart, DeleteProductCart, UpdateQuantityProductCart } from "./reducer/itemsActions";
 
 // si no existe el item 'cart' en el sessionStorage, se asigna un array vacio
 const initialCartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
 
 export const CartApp = () => {
 
-    const [cartItems, setCartItems] = useState(initialCartItems);
+    const [cartItems, dispatch] = useReducer(itemsReducer, initialCartItems);
+
+    useEffect(() => {
+        sessionStorage.setItem('cart', JSON.stringify(cartItems));
+    }, [cartItems]); // se ejecuta cuando cambia el estado de items
 
     // funcion para agregar un producto al carrito
     const handlerAddProductCart = (product) => {
@@ -15,39 +21,31 @@ export const CartApp = () => {
         const hasItem = cartItems.find(i => i.product.id === product.id);
 
         if (hasItem) {
-            setCartItems(
-                cartItems.map(i => {
-                    if (i.product.id === product.id) {
-                        i.quantity = i.quantity + 1;
-                    }
 
-                    return i;
-                })
-            );
-            // setCartItems([
-            //     ...cartItems.filter(i => i.product.id !== product.id),
-            //     {
-            //         product,
-            //         quantity: hasItem.quantity + 1,
-            //     }
-            // ]);
-        } else {
-            setCartItems([
-                ...cartItems,
+            dispatch(
                 {
-                    product,
-                    quantity: 1,
-                    // el total no es necesario, ya que se maneja en el componente CartView.jsx
+                    type: UpdateQuantityProductCart,
+                    payload: product,
                 }
-            ]);
+            );
+        } else {
+            dispatch(
+                {
+                    type: AddProductCart,
+                    payload: product,
+                }
+            );
         }
     };
 
     // funcion para eliminar un producto del carrito
     const handlerDeleteProductCart = (id) => {
-        setCartItems([
-            ...cartItems.filter(i => i.product.id !== id),
-        ])
+        dispatch(
+            {
+                type: DeleteProductCart,
+                payload: id,
+            }
+        );
     };
 
 
