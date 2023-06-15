@@ -1,11 +1,15 @@
+import { useNavigate } from "react-router-dom";
 
 export const ProductCardView = ({ handler, id, name, description, price }) => {
+
+    const navigate = useNavigate();
 
     const onAddProduct = (product) => {
         console.log(product);
         // se pasa el producto al componente padre hasta llegar a CartApp.jsx
         // donde ejecuta la función handlerAddProductCart y se agrega el producto
         handler(product);
+        navigate('/cart');
     };
 
     return (
