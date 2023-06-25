@@ -5,10 +5,12 @@ import { ProductCardView } from "./ProductCardView";
 export const CatalogView = ({ handler }) => {
 
     const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const findAll = async () => {
         const prods = await getProducts();
         setProducts(prods);
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -17,6 +19,10 @@ export const CatalogView = ({ handler }) => {
 
     return (
         <>
+            {
+                // si isLoading es true, muestra el div
+                isLoading && <div className="alert alert-info">Cargando ...</div>
+            }
             <div className="row">
                 {products.map(prod => (
                     <div className="col-4 my-2"
